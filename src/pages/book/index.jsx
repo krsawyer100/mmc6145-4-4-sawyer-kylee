@@ -2,7 +2,10 @@ import { Link, useParams, useNavigate, Navigate } from "react-router-dom"
 import { useBookContext } from "../../context/book"
 import styles from "./style.module.css"
 // TODO: import actions
-
+import {
+  ADD_BOOK,
+  REMOVE_BOOK
+} from "../../context/book/actions"
 export default function Book() {
   const { bookId } = useParams()
   const navigate = useNavigate()
@@ -17,6 +20,14 @@ export default function Book() {
     book = bookSearchResults.find(book => book.id === bookId)
   if (!book) return <Navigate to='/favorites' />
 
+  const addToFavorites = () => {
+    dispatch({ action: ADD_BOOK, payload: book })
+  }
+
+  const removeFromFavorites = () => {
+    dispatch({ action: REMOVE_BOOK, payload: book.id })
+  }
+
   return (
     <main>
       <BookInfo isFavorite={isFavoriteBook} {...book}/>
@@ -24,11 +35,11 @@ export default function Book() {
         {
           isFavoriteBook
           // TODO: add onClick function that calls dispatch to remove a book
-          ? <button>
+          ? <button onClick={removeFromFavorites}>
               Remove from Favorites
             </button>
           // TODO: add onClick function that calls dispatch to add a book
-          : <button>
+          : <button onClick={addToFavorites}>
               Add to Favorites
             </button>
         }
